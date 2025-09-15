@@ -104,3 +104,13 @@ http://localhost:8080/api/documentation
   ```bash
   docker-compose down
   ```
+---
+
+## 📖 Collection Postman
+
+Foi adicionado ao projeto a collection do postman com as rotas prontas e com automação do token de autenticação
+Importe o arquivo order_travel.postman_collection.json no postman para utilizar.
+
+### Autenticação admin
+- email: "admin@teste.com"
+- password: "admin123456"
