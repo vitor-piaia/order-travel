@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\CancelOrdersApproved;
+use App\Models\CancelOrderApproved;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CancelOrderApprovedRepository extends BaseRepository
@@ -16,12 +16,12 @@ class CancelOrderApprovedRepository extends BaseRepository
 
     public function model()
     {
-        return CancelOrdersApproved::class;
+        return CancelOrderApproved::class;
     }
 
     public function listPaginate(int $page, string $orderBy, ?int $userId = null)
     {
-        $query = QueryBuilder::for(CancelOrdersApproved::class)
+        $query = QueryBuilder::for(CancelOrderApproved::class)
             ->select('cancel_orders_approved.*')
             ->allowedFilters(['status']);
 
@@ -34,7 +34,7 @@ class CancelOrderApprovedRepository extends BaseRepository
             ->paginate(15, ['*'], 'page', $page);
     }
 
-    public function findCancelOrder(int $id, ?int $userId): ?CancelOrdersApproved
+    public function findCancelOrder(int $id, ?int $userId): ?CancelOrderApproved
     {
         $query = $this->model
             ->select('cancel_orders_approved.*')

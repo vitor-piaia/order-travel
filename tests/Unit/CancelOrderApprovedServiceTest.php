@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Enums\OrderEnum;
-use App\Models\CancelOrdersApproved;
 use App\Models\User;
 use App\Repositories\CancelOrderApprovedRepository;
 use App\Repositories\OrderRepository;

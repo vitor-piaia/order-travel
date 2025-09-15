@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class CancelOrdersApproved extends Model
+class CancelOrderApproved extends Model
 {
+    use HasFactory;
+
     protected $table = 'cancel_orders_approved';
 
     protected $primaryKey = 'id';

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Enums\OrderEnum;
 use App\Exceptions\CancelOrder\CancelOrderExistException;
 use App\Exceptions\Order\OrderNotApprovedException;
-use App\Models\CancelOrdersApproved;
+use App\Models\CancelOrderApproved;
 use App\Repositories\CancelOrderApprovedRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ class CancelOrderApprovedService
 {
     public function __construct(protected CancelOrderApprovedRepository $cancelOrderApprovedRepository, protected OrderService $orderService) {}
 
-    public function show(int $id): ?CancelOrdersApproved
+    public function show(int $id): ?CancelOrderApproved
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {

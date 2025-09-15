@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Exceptions\Order\CancelOrderExistException;
+use App\Exceptions\CancelOrder\CancelOrderExistException;
 use App\Exceptions\Order\OrderNotApprovedException;
 use App\Exceptions\Order\UserCreateOrderException;
 use App\Http\Controllers\Controller;
