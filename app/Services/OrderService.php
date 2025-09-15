@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderService
 {
-    public function __construct(protected OrderRepository $orderRepository){}
+    public function __construct(protected OrderRepository $orderRepository) {}
 
     public function show(int $orderId): ?Model
     {
@@ -27,7 +27,7 @@ class OrderService
         $order = $this->orderRepository->findOrder($orderId, $userId);
 
         if (! $order->order_id) {
-            throw new Exception();
+            throw new Exception;
         }
 
         return $order;
@@ -47,18 +47,18 @@ class OrderService
     {
         $orderExist = $this->orderRepository->checkOrderIdExists($post['order_id']);
         if ($orderExist) {
-            throw new OrderExistException();
+            throw new OrderExistException;
         }
 
         $data = array_merge($post, [
             'status' => OrderEnum::STATUS_REQUESTED,
-            'user_id' => Auth::id()
+            'user_id' => Auth::id(),
         ]);
 
         $order = $this->orderRepository->create($data);
 
         if (! $order->order_id) {
-            throw new Exception();
+            throw new Exception;
         }
 
         return $order;
@@ -71,7 +71,7 @@ class OrderService
         $update = $this->orderRepository->update($data, $orderId);
 
         if (! $update) {
-            throw new Exception();
+            throw new Exception;
         }
 
         return true;
@@ -82,7 +82,7 @@ class OrderService
         $update = $this->orderRepository->updateMultiple(['status' => $data['status']], ['order_id' => $data['order_id']]);
 
         if (! $update) {
-            throw new Exception();
+            throw new Exception;
         }
 
         if (config('mail.active')) {

@@ -15,6 +15,7 @@ class CancelOrderResource extends JsonResource
         parent::__construct($resource);
         $this->statusCode = $statusCode;
     }
+
     public function toArray(Request $request): array
     {
         return [

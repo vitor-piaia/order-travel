@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class CancelOrderApprovedService
 {
-    public function __construct(protected CancelOrderApprovedRepository $cancelOrderApprovedRepository, protected OrderService $orderService){}
+    public function __construct(protected CancelOrderApprovedRepository $cancelOrderApprovedRepository, protected OrderService $orderService) {}
 
     public function show(int $id): ?CancelOrdersApproved
     {
@@ -27,7 +27,7 @@ class CancelOrderApprovedService
         $cancelOrder = $this->cancelOrderApprovedRepository->findCancelOrder($id, $userId);
 
         if (! $cancelOrder->id) {
-            throw new Exception();
+            throw new Exception;
         }
 
         return $cancelOrder;
@@ -47,12 +47,12 @@ class CancelOrderApprovedService
     {
         $checkOrderIsApproved = $this->orderService->checkOrderIsApproved($post['order_id']);
         if (! $checkOrderIsApproved) {
-            throw new OrderNotApprovedException();
+            throw new OrderNotApprovedException;
         }
 
         $cancelOrderExist = $this->cancelOrderApprovedRepository->checkOrderIdExists($post['order_id']);
         if ($cancelOrderExist) {
-            throw new CancelOrderExistException();
+            throw new CancelOrderExistException;
         }
 
         $data = array_merge($post, ['status' => OrderEnum::STATUS_REQUESTED]);
@@ -60,7 +60,7 @@ class CancelOrderApprovedService
         $cancelOrder = $this->cancelOrderApprovedRepository->create($data);
 
         if (! $cancelOrder->id) {
-            throw new Exception();
+            throw new Exception;
         }
 
         return $cancelOrder;
@@ -73,19 +73,19 @@ class CancelOrderApprovedService
 
         if (! $update) {
             DB::rollBack();
-            throw new Exception();
+            throw new Exception;
         }
 
         if ($data['status'] == OrderEnum::STATUS_APPROVED) {
             $cancelOrder = $this->cancelOrderApprovedRepository->find($data['id']);
             app()->make(OrderService::class)->updateStatus([
                 'status' => OrderEnum::STATUS_CANCELED,
-                'order_id' => $cancelOrder->order_id
+                'order_id' => $cancelOrder->order_id,
             ]);
         }
 
-
         DB::commit();
+
         return true;
     }
 }

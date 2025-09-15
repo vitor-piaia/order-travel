@@ -6,10 +6,10 @@ use App\Enums\RoleEnum;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Facade;
-use PHPUnit\Framework\TestCase;
 use Exception;
+use Illuminate\Support\Facades\Facade;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase
 {
@@ -17,6 +17,7 @@ class UserServiceTest extends TestCase
     {
         parent::setUp();
     }
+
     protected function tearDown(): void
     {
         Mockery::close();
@@ -28,7 +29,7 @@ class UserServiceTest extends TestCase
     {
         $inputData = [
             'name' => fake()->name(),
-            'email' => fake()->email()
+            'email' => fake()->email(),
         ];
 
         $userMock = Mockery::mock(User::class)->makePartial();
@@ -56,7 +57,7 @@ class UserServiceTest extends TestCase
     {
         $inputData = [
             'name' => fake()->name(),
-            'email' => fake()->email()
+            'email' => fake()->email(),
         ];
 
         $userMock = Mockery::mock(User::class)->makePartial();

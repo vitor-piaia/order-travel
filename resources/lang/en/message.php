@@ -12,7 +12,7 @@ return [
         'cancel-order' => [
             'exist' => 'cancel order already registered',
             'user-create-order' => 'This user cannot update the cancel order',
-        ]
+        ],
     ],
     'success' => [
         'logout' => 'Successfully logged out',
@@ -21,6 +21,6 @@ return [
         ],
         'cancel-order' => [
             'updated' => 'Cancel order updated successfully',
-        ]
+        ],
     ],
 ];

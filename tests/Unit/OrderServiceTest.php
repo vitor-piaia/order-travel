@@ -8,12 +8,12 @@ use App\Models\Order;
 use App\Models\User;
 use App\Repositories\OrderRepository;
 use App\Services\OrderService;
+use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Facade;
-use PHPUnit\Framework\TestCase;
-use Exception;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 
 class OrderServiceTest extends TestCase
 {
@@ -21,6 +21,7 @@ class OrderServiceTest extends TestCase
     {
         parent::setUp();
     }
+
     protected function tearDown(): void
     {
         Mockery::close();
@@ -125,7 +126,7 @@ class OrderServiceTest extends TestCase
             ->shouldReceive('findOrder')
             ->once()
             ->with($orderId, $userId)
-            ->andThrow(new Exception());
+            ->andThrow(new Exception);
 
         $orderService = new OrderService($orderRepositoryMock);
         $orderService->show($orderId);
@@ -180,7 +181,7 @@ class OrderServiceTest extends TestCase
         $userId = fake()->numberBetween(1, 1000);
         $expectedData = array_merge($inputData, [
             'status' => OrderEnum::STATUS_REQUESTED,
-            'user_id' => $userId
+            'user_id' => $userId,
         ]);
 
         $orderRepositoryMock = Mockery::mock(OrderRepository::class);
@@ -254,7 +255,7 @@ class OrderServiceTest extends TestCase
 
         $orderRepositoryMock->shouldReceive('create')
             ->once()
-            ->andThrow(new Exception());
+            ->andThrow(new Exception);
 
         $orderService = new OrderService($orderRepositoryMock);
         $orderService->store($inputData);
@@ -298,33 +299,33 @@ class OrderServiceTest extends TestCase
         $inputData['order_id'] = $orderId;
         $orderRepositoryMock->shouldReceive('update')
             ->once()
-            ->andThrow(new Exception());
+            ->andThrow(new Exception);
 
         $orderService = new OrderService($orderRepositoryMock);
         $orderService->update($inputData);
     }
 
-//    public function test_it_update_status_order_successfully()
-//    {
-//        $inputData = [
-//            'order_id' => fake()->numberBetween(1, 1000),
-//            'status' => OrderEnum::STATUS_APPROVED,
-//        ];
-//
-//        $orderRepositoryMock = Mockery::mock(OrderRepository::class);
-//
-//        $orderRepositoryMock->shouldReceive('updateMultiple')
-//            ->once()
-//            ->with(['status' => $inputData['status']], ['order_id' => $inputData['order_id']])
-//            ->andReturn(true);
-//
-//        Config::set('mail.active', false);
-//
-//        $orderService = new OrderService($orderRepositoryMock);
-//        $update = $orderService->updateStatus($inputData);
-//
-//        $this->assertTrue($update);
-//    }
+    //    public function test_it_update_status_order_successfully()
+    //    {
+    //        $inputData = [
+    //            'order_id' => fake()->numberBetween(1, 1000),
+    //            'status' => OrderEnum::STATUS_APPROVED,
+    //        ];
+    //
+    //        $orderRepositoryMock = Mockery::mock(OrderRepository::class);
+    //
+    //        $orderRepositoryMock->shouldReceive('updateMultiple')
+    //            ->once()
+    //            ->with(['status' => $inputData['status']], ['order_id' => $inputData['order_id']])
+    //            ->andReturn(true);
+    //
+    //        Config::set('mail.active', false);
+    //
+    //        $orderService = new OrderService($orderRepositoryMock);
+    //        $update = $orderService->updateStatus($inputData);
+    //
+    //        $this->assertTrue($update);
+    //    }
 
     public function test_it_update_status_order_exception()
     {
@@ -338,7 +339,7 @@ class OrderServiceTest extends TestCase
 
         $orderRepositoryMock->shouldReceive('updateMultiple')
             ->once()
-            ->andThrow(new Exception());
+            ->andThrow(new Exception);
 
         $orderService = new OrderService($orderRepositoryMock);
         $orderService->updateStatus($inputData);

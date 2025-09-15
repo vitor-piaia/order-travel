@@ -9,16 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
-    public function __construct(protected UserRepository $userRepository)
-    {
-    }
+    public function __construct(protected UserRepository $userRepository) {}
 
     public function store($data): Model
     {
         $user = $this->userRepository->create($data);
 
         if (! $user->id) {
-            throw new Exception();
+            throw new Exception;
         }
 
         $user->assignRole(RoleEnum::WRITER);

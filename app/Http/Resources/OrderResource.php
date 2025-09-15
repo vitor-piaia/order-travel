@@ -15,6 +15,7 @@ class OrderResource extends JsonResource
         parent::__construct($resource);
         $this->statusCode = $statusCode;
     }
+
     public function toArray(Request $request): array
     {
         return [
@@ -23,7 +24,7 @@ class OrderResource extends JsonResource
             'destiny' => $this->destiny,
             'departureDate' => $this->departure_date,
             'returnDate' => $this->return_date,
-            'status' => $this->status
+            'status' => $this->status,
         ];
     }
 }

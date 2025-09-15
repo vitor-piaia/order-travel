@@ -31,7 +31,7 @@ class OrderRepository extends BaseRepository
                 'destiny',
                 AllowedFilter::scope('departure_date'),
                 AllowedFilter::scope('return_date'),
-                'status'
+                'status',
             ]);
 
         if (! empty($userId)) {
@@ -44,7 +44,7 @@ class OrderRepository extends BaseRepository
 
     public function findOrder(int $orderId, ?int $userId): ?Order
     {
-        $query =  $this->model->where('order_id', $orderId);
+        $query = $this->model->where('order_id', $orderId);
         if (! empty($userId)) {
             $query->where('user_id', $userId);
         }

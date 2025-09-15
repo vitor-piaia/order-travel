@@ -15,8 +15,8 @@ class UpdateStatusRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:cancel_orders_approved,id,status,' . OrderEnum::STATUS_REQUESTED,
-            'status' => 'required|string|in:' . OrderEnum::STATUS_APPROVED . ',' . OrderEnum::STATUS_CANCELED,
+            'id' => 'required|exists:cancel_orders_approved,id,status,'.OrderEnum::STATUS_REQUESTED,
+            'status' => 'required|string|in:'.OrderEnum::STATUS_APPROVED.','.OrderEnum::STATUS_CANCELED,
         ];
     }
 }

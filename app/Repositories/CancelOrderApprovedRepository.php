@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\CancelOrdersApproved;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class CancelOrderApprovedRepository extends BaseRepository
@@ -37,7 +36,7 @@ class CancelOrderApprovedRepository extends BaseRepository
 
     public function findCancelOrder(int $id, ?int $userId): ?CancelOrdersApproved
     {
-        $query =  $this->model
+        $query = $this->model
             ->select('cancel_orders_approved.*')
             ->where('cancel_orders_approved.id', $id);
 

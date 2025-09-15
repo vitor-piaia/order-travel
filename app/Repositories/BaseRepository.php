@@ -5,7 +5,6 @@ namespace App\Repositories;
 use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Model;
 
-
 abstract class BaseRepository
 {
     /**
@@ -19,11 +18,10 @@ abstract class BaseRepository
     protected $app;
 
     private $with = [];
+
     private $whereBetween = [];
 
     /**
-     * @param Application $app
-     *
      * @throws \Exception
      */
     public function __construct(Application $app)
@@ -49,15 +47,16 @@ abstract class BaseRepository
     /**
      * Make Model instance
      *
-     * @throws \Exception
      *
      * @return Model
+     *
+     * @throws \Exception
      */
     public function makeModel()
     {
         $_model = $this->app->make($this->model());
 
-        if (!$_model instanceof Model) {
+        if (! $_model instanceof Model) {
             throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
 
@@ -67,8 +66,8 @@ abstract class BaseRepository
     /**
      * Paginate records for scaffold.
      *
-     * @param int $perPage
-     * @param array $columns
+     * @param  int  $perPage
+     * @param  array  $columns
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function paginate($perPage, $columns = ['*'])
@@ -80,18 +79,19 @@ abstract class BaseRepository
 
     /**
      * Get a Build instance from model
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function newQuery() {
+    public function newQuery()
+    {
         return $this->model->newQuery();
     }
 
     /**
      * Build a query for retrieving all records.
      *
-     * @param array $search
-     * @param int|null $skip
-     * @param int|null $limit
+     * @param  int|null  $skip
+     * @param  int|null  $limit
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function allQuery(array $search = [], $skip = null, $limit = null)
@@ -99,36 +99,36 @@ abstract class BaseRepository
         $query = $this->newQuery();
 
         if (count($search)) {
-            foreach($search as $key => $value) {
+            foreach ($search as $key => $value) {
                 if (in_array($key, $this->getFieldsSearchable())) {
-                    if(is_array($value)){
+                    if (is_array($value)) {
                         $query->where($key, $value[0], $value[1]);
-                    }else if( str_contains($value, '%') ){
-                        $query->where($key, 'like' , $value);
-                    }else{
+                    } elseif (str_contains($value, '%')) {
+                        $query->where($key, 'like', $value);
+                    } else {
                         $query->where($key, $value);
                     }
                 }
             }
         }
+
         return $query;
     }
 
     /**
      * Retrieve all records with given filter criteria
      *
-     * @param array $search
-     * @param int|null $skip
-     * @param int|null $limit
-     * @param array $columns
-     *
+     * @param  array  $search
+     * @param  int|null  $skip
+     * @param  int|null  $limit
+     * @param  array  $columns
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
     public function all($search = [], $skip = null, $limit = null, $columns = ['*'])
     {
         $query = $this->allQuery($search, $skip, $limit);
 
-        if (!is_null($limit)) {
+        if (! is_null($limit)) {
             return $query->paginate($limit, ['*'], 'page', $skip);
         }
 
@@ -138,8 +138,7 @@ abstract class BaseRepository
     /**
      * Create model record
      *
-     * @param array $input
-     *
+     * @param  array  $input
      * @return Model
      */
     public function create($input)
@@ -154,9 +153,8 @@ abstract class BaseRepository
     /**
      * Find model record for given id
      *
-     * @param int $id
-     * @param array $columns
-     *
+     * @param  int  $id
+     * @param  array  $columns
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Model|null
      */
     public function find($id, $columns = ['*'])
@@ -179,9 +177,8 @@ abstract class BaseRepository
     /**
      * Update model record for given id
      *
-     * @param array $input
-     * @param int $id
-     *
+     * @param  array  $input
+     * @param  int  $id
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Model
      */
     public function update($input, $id)
@@ -207,15 +204,15 @@ abstract class BaseRepository
         if ($this->model instanceof Model) {
             $data = $this->model->fill($data)->toArray();
         }
+
         return $model->update($data);
     }
 
     /**
-     * @param int $id
+     * @param  int  $id
+     * @return bool|mixed|null
      *
      * @throws \Exception
-     *
-     * @return bool|mixed|null
      */
     public function delete($id)
     {
