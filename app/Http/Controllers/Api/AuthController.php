@@ -82,7 +82,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-            ], Response::HTTP_OK);
+            ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             Log::error($e);
 
