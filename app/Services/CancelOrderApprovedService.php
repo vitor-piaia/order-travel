@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Enums\OrderEnum;
 use App\Exceptions\CancelOrder\CancelOrderExistException;
 use App\Exceptions\Order\OrderNotApprovedException;
+use App\Models\CancelOrdersApproved;
 use App\Repositories\CancelOrderApprovedRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +17,7 @@ class CancelOrderApprovedService
 {
     public function __construct(protected CancelOrderApprovedRepository $cancelOrderApprovedRepository, protected OrderService $orderService){}
 
-    public function show(int $id)
+    public function show(int $id): ?CancelOrdersApproved
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {
@@ -30,7 +33,7 @@ class CancelOrderApprovedService
         return $cancelOrder;
     }
 
-    public function list(int $page = 1, string $orderBy = 'asc')
+    public function list(int $page = 1, string $orderBy = 'asc'): LengthAwarePaginator
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {
@@ -40,7 +43,7 @@ class CancelOrderApprovedService
         return $this->cancelOrderApprovedRepository->listPaginate($page, $orderBy, $userId);
     }
 
-    public function store(array $post)
+    public function store(array $post): Model
     {
         $checkOrderIsApproved = $this->orderService->checkOrderIsApproved($post['order_id']);
         if (! $checkOrderIsApproved) {
@@ -63,7 +66,7 @@ class CancelOrderApprovedService
         return $cancelOrder;
     }
 
-    public function updateStatus(array $data)
+    public function updateStatus(array $data): bool
     {
         DB::beginTransaction();
         $update = $this->cancelOrderApprovedRepository->update(['status' => $data['status']], $data['id']);
