@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\OrderEnum;
-use App\Exceptions\Order\CancelOrderExistException;
+use App\Exceptions\CancelOrder\CancelOrderExistException;
 use App\Exceptions\Order\OrderNotApprovedException;
 use App\Repositories\CancelOrderApprovedRepository;
 use Exception;
@@ -14,35 +14,30 @@ class CancelOrderApprovedService
 {
     public function __construct(protected CancelOrderApprovedRepository $cancelOrderApprovedRepository, protected OrderService $orderService){}
 
-    public function find(int $id)
-    {
-        return $this->cancelOrderApprovedRepository->find($id);
-    }
-
     public function show(int $id)
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {
-            $userId = auth()->id();
+            $userId = Auth::id();
         }
 
-        $order = $this->cancelOrderApprovedRepository->findCancelOrder($id, $userId);
+        $cancelOrder = $this->cancelOrderApprovedRepository->findCancelOrder($id, $userId);
 
-        if (! $order->order_id) {
+        if (! $cancelOrder->id) {
             throw new Exception();
         }
 
-        return $order;
+        return $cancelOrder;
     }
 
-    public function list()
+    public function list(int $page = 1, string $orderBy = 'asc')
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {
-            $userId = auth()->id();
+            $userId = Auth::id();
         }
 
-        return $this->cancelOrderApprovedRepository->listPaginate($userId);
+        return $this->cancelOrderApprovedRepository->listPaginate($page, $orderBy, $userId);
     }
 
     public function store(array $post)
@@ -52,34 +47,20 @@ class CancelOrderApprovedService
             throw new OrderNotApprovedException();
         }
 
-        $orderExist = $this->cancelOrderApprovedRepository->checkOrderIdExists($post['order_id']);
-        if ($orderExist) {
+        $cancelOrderExist = $this->cancelOrderApprovedRepository->checkOrderIdExists($post['order_id']);
+        if ($cancelOrderExist) {
             throw new CancelOrderExistException();
         }
 
-        $data = array_merge($post, [
-            'status' => OrderEnum::STATUS_REQUESTED,
-            'user_id' => auth()->id()
-        ]);
+        $data = array_merge($post, ['status' => OrderEnum::STATUS_REQUESTED]);
 
-        $order = $this->cancelOrderApprovedRepository->create($data);
+        $cancelOrder = $this->cancelOrderApprovedRepository->create($data);
 
-        if (! $order->order_id) {
+        if (! $cancelOrder->id) {
             throw new Exception();
         }
 
-        return $order;
-    }
-
-    public function update(array $data)
-    {
-        $update = $this->cancelOrderApprovedRepository->updateMultiple(['status' => $data['status']], ['order_id' => $data['order_id']]);
-
-        if (! $update) {
-            throw new Exception();
-        }
-
-        return true;
+        return $cancelOrder;
     }
 
     public function updateStatus(array $data)

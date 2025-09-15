@@ -20,7 +20,7 @@ class CancelOrderApprovedRepository extends BaseRepository
         return CancelOrdersApproved::class;
     }
 
-    public function listPaginate(?int $userId = null)
+    public function listPaginate(int $page, string $orderBy, ?int $userId = null)
     {
         $query = QueryBuilder::for(CancelOrdersApproved::class)
             ->select('cancel_orders_approved.*')
@@ -31,7 +31,8 @@ class CancelOrderApprovedRepository extends BaseRepository
                 ->where('user_id', $userId);
         }
 
-        return $query->paginate();
+        return $query->orderBy('created_at', $orderBy)
+            ->paginate(15, ['*'], 'page', $page);
     }
 
     public function findCancelOrder(int $id, ?int $userId): ?CancelOrdersApproved

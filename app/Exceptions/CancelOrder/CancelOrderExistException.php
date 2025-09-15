@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\Order;
+namespace App\Exceptions\CancelOrder;
 
 use Exception;
 

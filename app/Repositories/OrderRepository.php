@@ -24,7 +24,7 @@ class OrderRepository extends BaseRepository
         return Order::class;
     }
 
-    public function listPaginate(?int $userId = null)
+    public function listPaginate(int $page, string $orderBy, ?int $userId = null)
     {
         $query = QueryBuilder::for(Order::class)
             ->allowedFilters([
@@ -38,7 +38,8 @@ class OrderRepository extends BaseRepository
             $query->where('user_id', $userId);
         }
 
-        return $query->paginate();
+        return $query->orderBy('created_at', $orderBy)
+            ->paginate(15, ['*'], 'page', $page);
     }
 
     public function findOrder(int $orderId, ?int $userId): ?Order

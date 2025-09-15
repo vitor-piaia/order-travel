@@ -18,6 +18,9 @@ return [
         'logout' => 'Successfully logged out',
         'order' => [
             'updated' => 'Order updated successfully',
+        ],
+        'cancel-order' => [
+            'updated' => 'Cancel order updated successfully',
         ]
     ],
 ];

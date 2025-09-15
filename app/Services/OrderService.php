@@ -17,16 +17,11 @@ class OrderService
 {
     public function __construct(protected OrderRepository $orderRepository){}
 
-    public function find(int $id): Model
-    {
-        return $this->orderRepository->find($id);
-    }
-
-    public function show(int $orderId): Model
+    public function show(int $orderId): ?Model
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {
-            $userId = auth()->id();
+            $userId = Auth::id();
         }
 
         $order = $this->orderRepository->findOrder($orderId, $userId);
@@ -38,14 +33,14 @@ class OrderService
         return $order;
     }
 
-    public function list(): LengthAwarePaginator
+    public function list(int $page = 1, string $orderBy = 'asc'): LengthAwarePaginator
     {
         $userId = null;
         if (! Auth::user()->hasRole('admin')) {
-            $userId = auth()->id();
+            $userId = Auth::id();
         }
 
-        return $this->orderRepository->listPaginate($userId);
+        return $this->orderRepository->listPaginate($page, $orderBy, $userId);
     }
 
     public function store(array $post): Model
@@ -57,7 +52,7 @@ class OrderService
 
         $data = array_merge($post, [
             'status' => OrderEnum::STATUS_REQUESTED,
-            'user_id' => auth()->id()
+            'user_id' => Auth::id()
         ]);
 
         $order = $this->orderRepository->create($data);
@@ -71,7 +66,9 @@ class OrderService
 
     public function update(array $data): bool
     {
-        $update = $this->orderRepository->updateMultiple(['status' => $data['status']], ['order_id' => $data['order_id']]);
+        $orderId = $data['order_id'];
+        unset($data['order_id']);
+        $update = $this->orderRepository->update($data, $orderId);
 
         if (! $update) {
             throw new Exception();
@@ -88,9 +85,11 @@ class OrderService
             throw new Exception();
         }
 
-        $order = $this->orderRepository->find($data['order_id']);
-        $email = $order->user->email;
-        $order->status == OrderEnum::STATUS_APPROVED ? Mail::to($email)->send(new Approved($order)) : Mail::to($email)->send(new Reproved($order));
+        if (config('mail.active')) {
+            $order = $this->orderRepository->find($data['order_id']);
+            $email = $order->user->email;
+            $order->status == OrderEnum::STATUS_APPROVED ? Mail::to($email)->send(new Approved($order)) : Mail::to($email)->send(new Reproved($order));
+        }
 
         return true;
     }
