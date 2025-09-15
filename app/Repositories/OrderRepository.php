@@ -64,6 +64,7 @@ class OrderRepository extends BaseRepository
         return $this->model
             ->where('order_id', $orderId)
             ->where('status', OrderEnum::STATUS_APPROVED)
+            ->where('departure_date', '>=', now())
             ->exists();
     }
 }

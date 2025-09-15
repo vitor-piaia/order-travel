@@ -7,7 +7,7 @@ return [
         'order' => [
             'exist' => 'order already registered',
             'user-create-order' => 'This user cannot update the order',
-            'not-approved' => 'This order not approved yet',
+            'not-approved' => 'This request has not yet been approved or has already departed',
         ],
         'cancel-order' => [
             'exist' => 'cancel order already registered',
